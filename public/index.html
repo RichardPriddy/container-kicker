@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Container Kicker</title>
+
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/icons/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="icon" href="/assets/icons/favicon.ico">
+
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header class="titlebar">
+    <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+    <div class="path">container-kicker</div>
+    <div class="userbox" id="userbox"></div>
+  </header>
+
+  <div class="statline">
+    <span class="count" id="runningCount">0</span><span class="cursor"></span>
+    <span class="label">services · <span id="nodeCount">0</span> nodes</span>
+    <span class="sub" id="swarmState">checking swarm status…</span>
+  </div>
+
+  <div class="toolbar">
+    <div class="group-toggle" role="tablist" aria-label="Group by">
+      <button class="toggle-btn active" data-group="stack" id="groupStackBtn">by stack</button>
+      <button class="toggle-btn" data-group="node" id="groupNodeBtn">by node</button>
+    </div>
+    <input type="text" id="filterInput" placeholder="filter...">
+    <button class="refresh" id="refreshBtn" title="Refresh now">⟳</button>
+  </div>
+
+  <main id="listArea" class="list-area"></main>
+
+  <div class="empty" id="emptyState" style="display:none;">no services found.</div>
+  <div class="error" id="errorState" style="display:none;"></div>
+
+</div>
+
+<!-- Detail / logs panel. Side panel on desktop, full-screen overlay on mobile. -->
+<aside class="detail-panel" id="detailPanel">
+  <div class="detail-header">
+    <button class="back-btn" id="closeDetailBtn" aria-label="Close">←</button>
+    <div class="detail-titles">
+      <div class="detail-name" id="detailName">—</div>
+      <div class="detail-sub" id="detailSub">—</div>
+    </div>
+  </div>
+
+  <div class="detail-body">
+    <div class="detail-section" id="taskList"></div>
+
+    <div class="detail-actions">
+      <button class="action force" id="forceRestartBtn">rolling restart</button>
+      <button class="action hard" id="hardRestartBtn">hard restart (0→N)</button>
+    </div>
+
+    <div class="detail-section action-output-section" id="actionOutputSection" style="display:none;">
+      <div class="logs-header">
+        <span id="actionOutputLabel">action output</span>
+      </div>
+      <pre class="logs action-output" id="actionOutput"></pre>
+    </div>
+
+    <div class="detail-section logs-section">
+      <div class="logs-header">
+        <span>logs</span>
+        <label class="autoscroll"><input type="checkbox" id="autoscrollToggle" checked> autoscroll</label>
+      </div>
+      <pre class="logs" id="logsOutput">select a service to view logs</pre>
+    </div>
+  </div>
+</aside>
+<div class="scrim" id="scrim"></div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/assets/app.js"></script>
+</body>
+</html>

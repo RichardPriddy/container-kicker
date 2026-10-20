@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  container-kicker:
+    # `docker stack deploy` ignores `build:` and only uses `image:`, so build
+    # and tag the image first (see README.md), or push it to a registry and
+    # change this to e.g. registry.example.com/container-kicker:latest
+    image: container-kicker:latest
+    build: .   # used by plain `docker compose build`, ignored by stack deploy
+    ports:
+      - "8088:8088"
+    environment:
+      # --- Authentik OIDC ---
+      OIDC_ISSUER: "https://authentik.example.com/application/o/container-kicker/"
+      OIDC_CLIENT_ID_FILE: /run/secrets/oidc_client_id
+      OIDC_CLIENT_SECRET_FILE: /run/secrets/oidc_client_secret
+      # Public URL this service is reachable at — used to build the redirect
+      # URI Authentik sends users back to (must match the app's config there).
+      PUBLIC_URL: "https://container-kicker.example.com"
+      OIDC_CALLBACK_PATH: /auth/callback
+
+      # --- Session / cookies ---
+      SESSION_SECRET_FILE: /run/secrets/session_secret
+      COOKIE_SECURE: "true"   # set false only if not served over HTTPS
+      TRUST_PROXY: "true"     # set true if behind a reverse proxy/load balancer
+
+      PORT: "8088"
+    secrets:
+      - oidc_client_id
+      - oidc_client_secret
+      - session_secret
+    volumes:
+      # Manager-level access to Swarm's services/tasks/nodes API. This is
+      # equivalent to root on the swarm — see README.md's security note.
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      replicas: 1
+      placement:
+        # Service/task/node control-plane calls only work against a manager.
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+
+secrets:
+  oidc_client_id:
+    external: true
+  oidc_client_secret:
+    external: true
+  session_secret:
+    external: true
