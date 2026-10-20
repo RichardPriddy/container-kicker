@@ -232,8 +232,6 @@ docker service update --force --with-registry-auth \
 
 ## Example docker-compose file
 
-> **TODO (maintainer):** paste your own working stack file here. A good example shows the reverse-proxy labels, the shared overlay network, and your secrets wiring.
-
 ```yaml
 ################################################################  
 # Container Kicker - A service to allow easy restarting of
